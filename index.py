@@ -27,11 +27,12 @@ if "tfidf" not in st.session_state:
 st.subheader("上傳知識庫")
 uploaded_file = st.file_uploader("選擇一個 CSV 檔案", type="csv")
 if uploaded_file is not None:
-    new_faq = pd.read_csv(uploaded_file)
+    new_faq = pd.read_csv(uploaded_file, encoding="utf-8")
     st.session_state.faq_df = pd.concat([st.session_state.faq_df, new_faq], ignore_index=True)
     st.write(new_faq)
     # 取代前面的DEFAULT_FAQ，去空白紀錄，並讓資料重整理
     st.session_state.faq_df = new_faq.dropna().reset_index(drop=True)
+    st.success(f"已成功載入{len(df)}筆資料")
     
 
 with st.expander("檢視資料", expanded=False):
@@ -92,4 +93,5 @@ if st.button("送出") and user_question.strip():
     #展開可能的回答
     with st.expander("檢索結果:", expanded=False):
         st.dataframe(rows[['question', 'answer', 'score']], use_container_width=True)   
+
 
